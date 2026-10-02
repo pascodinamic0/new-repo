@@ -1,0 +1,16 @@
+create extension if not exists pgcrypto;
+create table if not exists profiles(id uuid primary key references auth.users(id) on delete cascade,display_name text,avatar_url text,created_at timestamptz default now());
+create table if not exists bible_verses(id bigint generated always as identity primary key,version text not null default 'KJV',book text not null,chapter int not null,verse int not null,text text not null,unique(version,book,chapter,verse));
+create table if not exists hymns(id uuid primary key default gen_random_uuid(),title text not null,number int,lyrics text,audio_url text,cover_url text,created_at timestamptz default now());
+create table if not exists lessons(id uuid primary key default gen_random_uuid(),title text not null,series text,description text,content text,pdf_url text,created_at timestamptz default now());
+create table if not exists announcements(id uuid primary key default gen_random_uuid(),title text not null,body text not null,published boolean default false,created_at timestamptz default now());
+create table if not exists events(id uuid primary key default gen_random_uuid(),title text not null,description text,starts_at timestamptz not null,location text,created_at timestamptz default now());
+create table if not exists bookmarks(id uuid primary key default gen_random_uuid(),user_id uuid references auth.users(id) on delete cascade,reference text not null,created_at timestamptz default now());
+create table if not exists notes(id uuid primary key default gen_random_uuid(),user_id uuid references auth.users(id) on delete cascade,reference text,body text not null,created_at timestamptz default now());
+create table if not exists community_posts(id uuid primary key default gen_random_uuid(),user_id uuid references auth.users(id) on delete cascade,body text not null,created_at timestamptz default now());
+alter table profiles enable row level security;alter table bookmarks enable row level security;alter table notes enable row level security;alter table community_posts enable row level security;
+create policy "profiles own" on profiles for all using(auth.uid()=id) with check(auth.uid()=id);
+create policy "bookmarks own" on bookmarks for all using(auth.uid()=user_id) with check(auth.uid()=user_id);
+create policy "notes own" on notes for all using(auth.uid()=user_id) with check(auth.uid()=user_id);
+create policy "community read" on community_posts for select using(true);
+create policy "community own write" on community_posts for insert with check(auth.uid()=user_id);
