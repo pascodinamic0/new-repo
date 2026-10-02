@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";
+export async function POST(req:Request){try{const {text,from="en",to="fr"}=await req.json();if(!text?.trim())return NextResponse.json({error:"Text is required"},{status:400});const r=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(text)+"&langpair="+encodeURIComponent(from+"|"+to));const j=await r.json();return NextResponse.json({translation:j?.responseData?.translatedText||""});}catch{return NextResponse.json({error:"Translation service unavailable"},{status:502});}}
