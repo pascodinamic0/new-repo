@@ -191,8 +191,8 @@ img { max-width: 100%; display: block }
 .hero p { margin: 6px 0 0; color: rgba(255,255,255,0.9); line-height: 1.4; font-size: 14px }
 .tiles {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
   margin-top: 14px;
 }
 .tile {
@@ -207,9 +207,10 @@ img { max-width: 100%; display: block }
 }
 .tile span {
   font-weight: 700;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.15;
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 .tile svg { flex: none }
 .t-bible { background: #1d4e89 }
@@ -396,7 +397,7 @@ textarea { min-height: 110px; resize: vertical }
   .chapters { grid-template-columns: repeat(8, minmax(0, 1fr)) }
   .hero img { height: 300px }
   .today { grid-template-columns: 1fr 1fr }
-  .tiles { gap: 12px }
+  .tiles { gap: 12px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .tile { min-height: 120px; border-radius: 18px; padding: 14px }
   .tile span { font-size: 15px }
   .main { padding: 20px 20px 28px }
@@ -465,7 +466,7 @@ textarea { min-height: 110px; resize: vertical }
   * { scroll-behavior: auto }
 }
 @media (max-width: 430px) {
-  .tiles { gap: 6px; }
-  .tile { padding: 8px 5px; }
-  .tile span { font-size: 10px; letter-spacing: -0.02em; line-height: 1.15; white-space: nowrap; }
+  .tiles { gap: 10px; }
+  .tile { min-height: 96px; padding: 14px 12px; }
+  .tile span { font-size: 16px; letter-spacing: 0; }
 }

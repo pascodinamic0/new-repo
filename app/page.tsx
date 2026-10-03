@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { BookOpen, Calendar, GraduationCap, Languages, MoreHorizontal, Music, Users, Video } from "lucide-react"
+import { BookOpen, GraduationCap, Music, Users } from "lucide-react"
 import { useCopy, useLocale } from "@/components/locale"
 
 const lamp = {
@@ -21,11 +21,7 @@ export default function HomePage() {
     { href: "/bible", title: t.bible, icon: BookOpen, tone: "t-bible" },
     { href: "/cantiques", title: t.hymns, icon: Music, tone: "t-hymns" },
     { href: "/lecons", title: t.lessons, icon: GraduationCap, tone: "t-lessons" },
-    { href: "/traduction", title: t.translate, icon: Languages, tone: "t-translate" },
     { href: "/communaute", title: t.community, icon: Users, tone: "t-community" },
-    { href: "/communaute#rdv", title: locale === "fr" ? "Agenda" : "Events", icon: Calendar, tone: "t-events" },
-    { href: "/cantiques", title: locale === "fr" ? "Média" : "Media", icon: Video, tone: "t-media" },
-    { href: "/plus", title: locale === "fr" ? "Plus" : "More", icon: MoreHorizontal, tone: "t-more" },
   ]
   return (
     <div>
