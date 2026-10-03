@@ -41,7 +41,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
     router.push(query ? `/bible?q=${encodeURIComponent(query)}` : "/bible")
   }
   const Lang = ({ test }: { test: string }) => (
-    <div className={test === "side" ? "lang" : "lang-switch"} role="group" aria-label={locale === "fr" ? "Langue" : "Language"}>
+    <div className={test === "side" ? "lang" : "lang-icons"} role="group" aria-label={locale === "fr" ? "Langue" : "Language"}>
       <button type="button" className={locale === "fr" ? "on" : ""} data-testid={test === "side" ? "lang-fr" : "lang-fr-mobile"} onClick={() => setLocale("fr")}>FR</button>
       <button type="button" className={locale === "en" ? "on" : ""} data-testid="lang-en" onClick={() => setLocale("en")}>EN</button>
     </div>

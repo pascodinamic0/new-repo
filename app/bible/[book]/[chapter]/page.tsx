@@ -1,10 +1,13 @@
 "use client"
 import Link from "next/link"
 import { useParams, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo } from "react"
+import { ChevronLeft, ChevronRight, Pause, Play, Search, Volume2 } from "lucide-react"
 import { bookById } from "@/lib/canon"
 import { cacheChapter, readChapter } from "@/lib/idb"
 import { useCopy, useLocale } from "@/components/locale"
+import { useReadAloud } from "@/components/readAloud"
+import { useState } from "react"
 
 type Payload = { version: string; book: string; chapter: number; verses: { v: number; t: string }[] }
 
@@ -14,15 +17,17 @@ export default function ChapterPage() {
   const highlight = Number(search.get("v") || 0)
   const book = bookById(params.book)
   const chapter = Number(params.chapter)
-  const { locale } = useLocale()
+  const { locale, setLocale } = useLocale()
   const t = useCopy()
   const version = locale === "en" ? "kjv" : "lsg"
+  const speech = useReadAloud(version === "lsg" ? "fr-FR" : "en-US")
   const [data, setData] = useState<Payload | null>(null)
   const [toast, setToast] = useState("")
   const [note, setNote] = useState("")
   const [saved, setSaved] = useState<number[]>([])
 
   useEffect(() => {
+    speech.stop()
     if (!book) return
     const key = `${version}:${book.id}:${chapter}`
     let cancel = false
@@ -40,7 +45,15 @@ export default function ChapterPage() {
       }
     })()
     return () => { cancel = true }
+    // speech.stop identity changes; we only reset when the chapter changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [book, chapter, version, locale])
+
+  useEffect(() => {
+    const verse = data?.verses[speech.index]
+    if (!verse) return
+    document.getElementById(`v${verse.v}`)?.scrollIntoView({ block: "center", behavior: "smooth" })
+  }, [speech.index, data])
 
   useEffect(() => {
     fetch("/api/bookmarks").then(r => r.json()).then(d => {
@@ -49,8 +62,11 @@ export default function ChapterPage() {
     }).catch(() => {})
   }, [book, chapter, version])
 
+  const lines = useMemo(() => (data?.verses || []).map(verse => verse.t), [data])
+
   if (!book) return <p>{t.notFound}</p>
   const name = locale === "fr" ? book.fr : book.en
+  const spoken = speech.index >= 0 ? data?.verses[speech.index]?.v : 0
 
   async function toggle(verse: number) {
     const res = await fetch("/api/bookmarks", {
@@ -76,29 +92,40 @@ export default function ChapterPage() {
   }
 
   return (
-    <article className="reader" data-testid="chapter">
-      <p className="kicker"><Link href={`/bible/${book.id.toLowerCase()}`}>{name}</Link> · {version === "lsg" ? "LSG" : "KJV"}</p>
-      <div className="section-title">
-        <h2>{name} {chapter}</h2>
-        <span className="row">
-          {chapter > 1 && <Link className="btn-ghost" href={`/bible/${book.id.toLowerCase()}/${chapter - 1}`}>{chapter - 1}</Link>}
-          {chapter < book.chapters && <Link className="btn-ghost" href={`/bible/${book.id.toLowerCase()}/${chapter + 1}`}>{chapter + 1}</Link>}
-        </span>
+    <article className="reader" data-testid="chapter" style={{ paddingBottom: 96 }}>
+      <div className="reader-bar">
+        <Link className="pill" href={`/bible/${book.id.toLowerCase()}`}>{name} {chapter}</Link>
+        <button type="button" className={version === "lsg" ? "pill on" : "pill"} onClick={() => setLocale("fr")}>LSG</button>
+        <button type="button" className={version === "kjv" ? "pill on" : "pill"} onClick={() => setLocale("en")}>KJV</button>
+        <span className="grow" />
+        <button type="button" className="iconhit" style={{ color: "var(--navy)" }} aria-label={locale === "fr" ? "Écouter" : "Listen"} onClick={() => speech.toggle(lines)}>
+          <Volume2 size={20} />
+        </button>
+        <Link className="iconhit" style={{ color: "var(--navy)" }} href="/bible" aria-label={t.search}><Search size={20} /></Link>
       </div>
       {toast && <div className="toast" role="status">{toast}</div>}
-      {(data?.verses || []).map(verse => (
-        <div key={verse.v} id={`v${verse.v}`} className={verse.v === highlight ? "verse mark" : "verse"} data-testid={`verse-${verse.v}`}>
-          <b>{verse.v}</b>
-          <span>{verse.t}</span>
-          <button className="btn-ghost" data-testid={verse.v === 1 ? "bookmark-verse" : undefined} onClick={() => toggle(verse.v)} aria-label={t.bookmark}>
-            {saved.includes(verse.v) ? "●" : "○"}
-          </button>
-        </div>
-      ))}
+      <div className="verse-flow">
+        {(data?.verses || []).map(verse => (
+          <div key={verse.v} id={`v${verse.v}`} className={verse.v === highlight || verse.v === spoken ? "verse speaking" : "verse"} data-testid={`verse-${verse.v}`}>
+            <b>{verse.v}</b>
+            <span>{verse.t}</span>
+            <button className="btn-ghost" data-testid={verse.v === 1 ? "bookmark-verse" : undefined} onClick={() => toggle(verse.v)} aria-label={t.bookmark}>
+              {saved.includes(verse.v) ? "●" : "○"}
+            </button>
+          </div>
+        ))}
+      </div>
       <div className="panel" style={{ marginTop: 16 }}>
         <h3>{t.note}</h3>
         <textarea value={note} onChange={e => setNote(e.target.value)} placeholder={locale === "fr" ? "Une note pour ce chapitre" : "A note for this chapter"} />
         <button className="btn" onClick={saveNote}>{t.save}</button>
+      </div>
+      <div className="listen-bar">
+        {chapter > 1 ? <Link href={`/bible/${book.id.toLowerCase()}/${chapter - 1}`} aria-label={locale === "fr" ? "Chapitre précédent" : "Previous chapter"}><ChevronLeft size={22} /></Link> : <span />}
+        <button type="button" className="go" data-testid="play" aria-label={speech.on ? "Pause" : "Play"} onClick={() => speech.toggle(lines)}>
+          {speech.on ? <Pause size={26} /> : <Play size={26} />}
+        </button>
+        {chapter < book.chapters ? <Link href={`/bible/${book.id.toLowerCase()}/${chapter + 1}`} aria-label={locale === "fr" ? "Chapitre suivant" : "Next chapter"}><ChevronRight size={22} /></Link> : <span />}
       </div>
     </article>
   )

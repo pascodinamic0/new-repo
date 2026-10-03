@@ -39,8 +39,9 @@ img { max-width: 100%; display: block }
   gap: 8px;
   min-height: 56px;
   padding: calc(4px + env(safe-area-inset-top)) 8px 4px 12px;
-  background: var(--paper);
-  border-bottom: 1px solid var(--line);
+  background: var(--navy);
+  color: white;
+  border-bottom: 0;
 }
 .brand {
   display: flex;
@@ -53,7 +54,7 @@ img { max-width: 100%; display: block }
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: var(--navy);
+  background: transparent;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -63,39 +64,30 @@ img { max-width: 100%; display: block }
 .brand b {
   display: block;
   font-size: 16px;
-  font-weight: 750;
-  letter-spacing: 0.12em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   line-height: 1;
+  color: white;
 }
 .head-actions { display: flex; align-items: center; gap: 0; flex: none }
-.lang-switch {
-  display: flex;
-  align-items: center;
-  height: 28px;
-  margin-right: 2px;
-  padding: 2px;
-  border-radius: 8px;
-  background: #e7e1d6;
-}
-.lang-switch button {
-  min-width: 32px;
-  height: 24px;
-  padding: 0 6px;
+.lang-icons { display: flex; align-items: center; }
+.lang-icons button {
+  width: 40px;
+  height: 44px;
   border: 0;
-  border-radius: 6px;
   background: transparent;
-  color: #5c6573;
-  font-size: 11px;
-  font-weight: 750;
-  letter-spacing: 0.06em;
+  color: rgba(255,255,255,.72);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
-.lang-switch button.on { background: white; color: var(--navy) }
+.lang-icons button.on { color: #e6c56a; }
 .iconhit {
   width: 44px;
   height: 44px;
   border: 0;
   background: transparent;
-  color: var(--navy);
+  color: white;
   display: grid;
   place-items: center;
   position: relative;
@@ -136,6 +128,7 @@ img { max-width: 100%; display: block }
   border-radius: 14px;
   color: var(--navy);
 }
+.search-panel .iconhit { color: var(--navy); }
 .search-row input {
   flex: 1;
   min-width: 0;
@@ -531,4 +524,89 @@ textarea { min-height: 110px; resize: vertical }
   .tiles { gap: 10px; }
   .tile { min-height: 96px; padding: 14px 12px; }
   .tile span { font-size: 16px; letter-spacing: 0; }
+}
+
+.reader-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 14px;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #ece7de;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 14px;
+  border: 0;
+}
+.pill.on { background: var(--navy); color: white; }
+.reader-bar .grow { flex: 1; }
+.verse-flow { font-size: 20px; line-height: 1.55; }
+.verse-flow .verse {
+  display: block;
+  padding: 8px 0 8px 12px;
+  border-bottom: 0;
+  border-left: 3px solid transparent;
+}
+.verse-flow .verse.speaking {
+  background: #f3efe4;
+  border-left-color: var(--navy);
+}
+.verse-flow .verse b { color: var(--gold); margin-right: 6px; font-size: 13px; }
+.stanza { margin: 0 0 22px; }
+.stanza .n { color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+.stanza p { margin: 0; font-size: 20px; line-height: 1.45; white-space: pre-wrap; }
+.stanza.speaking p { background: #f3efe4; }
+.hymn-line {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 14px 2px;
+  border-bottom: 1px solid var(--line);
+  min-height: 48px;
+}
+.hymn-line b { width: 28px; color: var(--gold); }
+.listen-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(74px + env(safe-area-inset-bottom));
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background: white;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(16, 28, 48, 0.18);
+}
+.listen-bar a, .listen-bar button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #f3efe6;
+  color: var(--navy);
+  display: grid;
+  place-items: center;
+}
+.listen-bar .go {
+  width: 58px;
+  height: 58px;
+  background: var(--navy);
+  color: white;
+}
+.hymn-tools { display: flex; gap: 4px; }
+.hymn-tools button, .hymn-tools a {
+  width: 44px; height: 44px; border: 0; background: transparent; color: var(--navy);
+  display: grid; place-items: center;
+}
+@media (min-width: 1100px) {
+  .listen-bar { bottom: 24px; }
+  .topbar { display: none; }
 }

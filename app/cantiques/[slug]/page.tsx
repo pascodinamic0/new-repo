@@ -1,108 +1,96 @@
 "use client"
 import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
-import { Pause, Play, SkipBack, SkipForward } from "lucide-react"
+import { useParams } from "next/navigation"
+import { useEffect, useMemo, useState } from "react"
+import { ChevronLeft, ChevronRight, Pause, Play, Share2, Star } from "lucide-react"
 import hymns from "@/data/hymns.json"
 import { useCopy, useLocale } from "@/components/locale"
-
-function clock(n: number) {
-  if (!Number.isFinite(n) || n < 0) return "0:00"
-  const m = Math.floor(n / 60)
-  const s = Math.floor(n % 60)
-  return `${m}:${String(s).padStart(2, "0")}`
-}
+import { useReadAloud } from "@/components/readAloud"
 
 export default function HymnPage() {
   const { slug } = useParams<{ slug: string }>()
-  const router = useRouter()
-  const hymn = hymns.find(item => item.slug === slug)
   const { locale } = useLocale()
   const t = useCopy()
-  const audio = useRef<HTMLAudioElement>(null)
-  const [playing, setPlaying] = useState(false)
-  const [time, setTime] = useState(0)
-  const [dur, setDur] = useState(0)
   const index = hymns.findIndex(item => item.slug === slug)
-  useEffect(() => { setPlaying(false); setTime(0); setDur(0) }, [slug])
+  const hymn = hymns[index]
+  const speech = useReadAloud(locale === "fr" ? "fr-FR" : "en-US")
+  const [star, setStar] = useState(false)
+  const [toast, setToast] = useState("")
+  useEffect(() => {
+    setStar(localStorage.getItem(`mtusda-star-${slug}`) === "1")
+    speech.stop()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug])
+  const lines = useMemo(() => {
+    if (!hymn) return []
+    return hymn.stanzas.map(stanza => (locale === "fr" && stanza.fr.trim() ? stanza.fr : stanza.en).replace(/\n/g, " "))
+  }, [hymn, locale])
   if (!hymn) return <p>{t.notFound}</p>
   const title = locale === "fr" ? hymn.title_fr : hymn.title_en
-  const otherTitle = locale === "fr" ? hymn.title_en : hymn.title_fr
-  const lyrics = locale === "fr" ? hymn.lyrics_fr : hymn.lyrics_en
-  const other = locale === "fr" ? hymn.lyrics_en : hymn.lyrics_fr
-  function go(step: number) {
-    const next = hymns[(index + step + hymns.length) % hymns.length]
-    router.push(`/cantiques/${next.slug}`)
+  const other = locale === "fr" ? "en" : "fr"
+  function toggleStar() {
+    const next = !star
+    setStar(next)
+    localStorage.setItem(`mtusda-star-${slug}`, next ? "1" : "0")
   }
-  function toggle() {
-    const node = audio.current
-    if (!node) return
-    if (node.paused) node.play().catch(() => setPlaying(false))
-    else node.pause()
+  async function share() {
+    const text = hymn.stanzas.map((stanza, i) => `${i + 1}\n${locale === "fr" && stanza.fr.trim() ? stanza.fr : stanza.en}`).join("\n\n")
+    const payload = `${hymn.number}. ${title}\n\n${text}`
+    if (navigator.share) {
+      try { await navigator.share({ title, text: payload }); return } catch { /* cancelled */ }
+    }
+    await navigator.clipboard.writeText(payload)
+    setToast(locale === "fr" ? "Texte copié." : "Text copied.")
   }
+  const prev = hymns[(index - 1 + hymns.length) % hymns.length]
+  const next = hymns[(index + 1) % hymns.length]
   return (
-    <article>
-      <p className="kicker"><Link href="/cantiques">{t.hymns}</Link> · N° {hymn.number}</p>
-      <div className="hymn-art">
-        <img src="/images/bible.jpg" alt="" />
-        <div className="shade" />
-        <div className="copy">
-          <div className="kicker">{locale === "fr" ? "Cantique" : "Hymn"} · N° {hymn.number}</div>
-          <h2>{title}</h2>
-          <p>{locale === "fr" ? hymn.author_fr : hymn.author_en}</p>
+    <article style={{ paddingBottom: 96 }}>
+      <div className="reader-bar">
+        <Link href="/cantiques" aria-label={t.hymns}><ChevronLeft size={20} /></Link>
+        <b style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {hymn.number}. {title}
+        </b>
+        <div className="hymn-tools">
+          <button type="button" aria-label={locale === "fr" ? "Favori" : "Favorite"} onClick={toggleStar}>
+            <Star size={20} fill={star ? "currentColor" : "none"} />
+          </button>
+          <button type="button" aria-label={locale === "fr" ? "Partager" : "Share"} onClick={share}>
+            <Share2 size={20} />
+          </button>
         </div>
       </div>
-      {hymn.audio ? (
-        <div className="player">
-          <button type="button" aria-label={locale === "fr" ? "Précédent" : "Previous"} onClick={() => go(-1)}><SkipBack size={18} /></button>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <button data-testid="play" type="button" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
-                {playing ? <Pause size={18} /> : <Play size={18} />}
-              </button>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <b>{title}</b>
-                <div className="meta">{clock(time)} / {clock(dur || 0)}</div>
-                <input
-                  type="range"
-                  min={0}
-                  max={dur || 0}
-                  step={0.1}
-                  value={Math.min(time, dur || 0)}
-                  aria-label={locale === "fr" ? "Progression" : "Progress"}
-                  onChange={e => {
-                    const next = Number(e.target.value)
-                    if (audio.current) audio.current.currentTime = next
-                    setTime(next)
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-          <button type="button" aria-label={locale === "fr" ? "Suivant" : "Next"} onClick={() => go(1)}><SkipForward size={18} /></button>
-          <audio
-            ref={audio}
-            src={hymn.audio}
-            preload="metadata"
-            data-testid="audio"
-            onEnded={() => setPlaying(false)}
-            onPlay={() => setPlaying(true)}
-            onPause={() => setPlaying(false)}
-            onTimeUpdate={e => setTime(e.currentTarget.currentTime)}
-            onLoadedMetadata={e => setDur(e.currentTarget.duration)}
-          />
-        </div>
-      ) : (
-        <p className="muted">{hymn.audioCredit}</p>
-      )}
-      <div className="panel" style={{ marginTop: 14 }}>
-        <div className="lyrics" data-testid="lyrics">{lyrics}</div>
+      {toast && <div className="toast" role="status">{toast}</div>}
+      <div data-testid="lyrics">
+        {hymn.stanzas.map((stanza, i) => {
+          const text = locale === "fr" && stanza.fr.trim() ? stanza.fr : stanza.en
+          return (
+            <section key={i} className={speech.index === i ? "stanza speaking" : "stanza"} data-speaking={speech.index === i ? "true" : "false"}>
+              <div className="n">{i + 1}</div>
+              <p>{text}</p>
+            </section>
+          )
+        })}
       </div>
-      <div className="section-title"><h2>{otherTitle}</h2></div>
-      <div className="panel">
-        <div className="lyrics alt">{other}</div>
+      <h3>{locale === "fr" ? hymn.title_en : hymn.title_fr}</h3>
+      {hymn.stanzas.map((stanza, i) => {
+        const text = other === "fr" ? stanza.fr : stanza.en
+        if (!text.trim()) return null
+        return (
+          <section key={`o${i}`} className="stanza">
+            <div className="n">{i + 1}</div>
+            <p className="muted">{text}</p>
+          </section>
+        )
+      })}
+      <p className="muted">{hymn.rights}</p>
+      <div className="listen-bar">
+        <Link href={`/cantiques/${prev.slug}`} aria-label={locale === "fr" ? "Précédent" : "Previous"}><ChevronLeft size={22} /></Link>
+        <button type="button" className="go" data-testid="play" aria-label={speech.on ? "Pause" : "Play"} onClick={() => speech.toggle(lines)}>
+          {speech.on ? <Pause size={26} /> : <Play size={26} />}
+        </button>
+        <Link href={`/cantiques/${next.slug}`} aria-label={locale === "fr" ? "Suivant" : "Next"}><ChevronRight size={22} /></Link>
       </div>
-      <p className="muted">{locale === "fr" ? hymn.frCredit : hymn.audioCredit}</p>
     </article>
   )
 }
