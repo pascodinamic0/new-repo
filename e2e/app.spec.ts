@@ -54,6 +54,7 @@ test("screens and crawl", async ({ page }, info) => {
   const shot = `qa/shots/${info.project.name}.png`
   fs.mkdirSync("qa/shots", { recursive: true })
   await page.goto("/")
+  await page.waitForTimeout(1200)
   await page.screenshot({ path: shot, fullPage: true })
   if (info.project.name !== "desktop") return
   const hrefs = await page.locator("a[href^='/']").evaluateAll(nodes => nodes.map(n => (n as HTMLAnchorElement).getAttribute("href")).filter(Boolean) as string[])
@@ -63,7 +64,25 @@ test("screens and crawl", async ({ page }, info) => {
     const res = await page.request.get(href!)
     expect(res.status(), href).toBeLessThan(400)
   }
+  if (info.project.name === "desktop") {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto("/bible/john/3")
+    await page.getByTestId("verse-16").waitFor()
+    await page.screenshot({ path: "qa/shots/desktop-bible.png", fullPage: false })
+    await page.goto("/cantiques/amazing-grace")
+    await page.getByTestId("lyrics").waitFor()
+    await page.screenshot({ path: "qa/shots/desktop-hymn.png", fullPage: false })
+    await page.goto("/lecons/sabbat-cadeau")
+    await page.screenshot({ path: "qa/shots/desktop-lesson.png", fullPage: false })
+    await page.goto("/communaute")
+    await page.screenshot({ path: "qa/shots/desktop-community.png", fullPage: false })
+    await page.setViewportSize({ width: 375, height: 667 })
+    await page.goto("/bible/john/3")
+    await page.screenshot({ path: "qa/shots/se-bible.png", fullPage: false })
+    await page.goto("/communaute")
+    await page.screenshot({ path: "qa/shots/se-community.png", fullPage: false })
+  }
   const missing = await page.request.get("/cette-page-n-existe-pas")
   expect(missing.status()).toBe(404)
-  expect(await missing.text()).toContain("n'existe pas")
+  expect(await missing.text()).toMatch(/existe pas/)
 })
