@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { BookOpen, Church, Home, Languages, Music, Users, GraduationCap, Library } from "lucide-react"
 import { useCopy, useLocale } from "./locale"
 
@@ -19,15 +19,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname()
   const { locale, setLocale } = useLocale()
   const t = useCopy()
-  const [splash, setSplash] = useState(false)
-  useEffect(() => {
-    if (!sessionStorage.getItem("mtusda-splash")) {
-      setSplash(true)
-      sessionStorage.setItem("mtusda-splash", "1")
-      const id = setTimeout(() => setSplash(false), 900)
-      return () => clearTimeout(id)
-    }
-  }, [])
   useEffect(() => {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {})
   }, [])
@@ -47,15 +38,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const active = (href: string) => href === "/" ? path === "/" : path.startsWith(href)
   return (
     <div className="app">
-      {splash && (
-        <div className="splash">
-          <div>
-            <div className="mark" style={{ margin: "0 auto 12px" }}><Mark /></div>
-            <div className="kicker">MTUSDA</div>
-            <h1 style={{ fontFamily: "var(--display)", margin: 0 }}>{t.city}</h1>
-          </div>
-        </div>
-      )}
       <aside className="sidebar">
         <div className="sideword">MTUSDA</div>
         {[...items, ...more].map(item => (
