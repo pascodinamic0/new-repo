@@ -28,10 +28,10 @@ test("four pillars in French and English", async ({ page }, info) => {
   await expect(page.getByTestId("lesson-body").first()).toContainText("Kinshasa")
 
   await page.goto("/communaute")
-  await expect(page.getByTestId("announcement")).toContainText(/sabbat/i)
+  await expect(page.getByTestId("announcement").filter({ hasText: /sabbat/i }).first()).toBeVisible()
 
   await page.locator('[data-testid="lang-en"]:visible').click()
-  await expect(page.getByTestId("announcement")).toContainText(/Sabbath/i)
+  await expect(page.getByTestId("announcement").filter({ hasText: /Sabbath/i }).first()).toBeVisible()
   await page.goto("/bible/john/3")
   await expect(page.getByTestId("verse-16")).toContainText("loved")
   await page.goto("/cantiques/amazing-grace")
