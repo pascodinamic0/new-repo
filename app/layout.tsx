@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Bible, cantiques, leçons et communauté de l'église adventiste MTUSDA à Kinshasa.",
   applicationName: "MTUSDA",
   appleWebApp: { capable: true, title: "MTUSDA", statusBarStyle: "black-translucent" },
+  // iOS still keys off this name. Next only emits mobile-web-app-capable.
+  other: { "apple-mobile-web-app-capable": "yes" },
   icons: { icon: "/icon-192.png", apple: "/apple-touch-icon.png" },
 }
 

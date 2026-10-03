@@ -92,7 +92,7 @@ export default function ChapterPage() {
   }
 
   return (
-    <article className="reader" data-testid="chapter" style={{ paddingBottom: 96 }}>
+    <article className="reader" data-testid="chapter">
       <div className="reader-bar">
         <Link className="pill" href={`/bible/${book.id.toLowerCase()}`}>{name} {chapter}</Link>
         <button type="button" className={version === "lsg" ? "pill on" : "pill"} onClick={() => setLocale("fr")}>LSG</button>

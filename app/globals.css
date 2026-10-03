@@ -556,6 +556,13 @@ textarea { min-height: 110px; resize: vertical }
   .tile span { font-size: 16px; letter-spacing: 0; }
 }
 
+.reader,
+.hymn-sheet {
+  /* Phone: the fixed player overlaps the scrollport by ~85px and the tab bar
+     sits just under it. This padding lets the last verse / last stanza scroll
+     fully above both. */
+  padding-bottom: 176px;
+}
 .reader-bar {
   display: flex;
   align-items: center;

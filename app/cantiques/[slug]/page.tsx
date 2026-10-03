@@ -45,7 +45,7 @@ export default function HymnPage() {
   const prev = hymns[(index - 1 + hymns.length) % hymns.length]
   const next = hymns[(index + 1) % hymns.length]
   return (
-    <article style={{ paddingBottom: 96 }}>
+    <article className="hymn-sheet">
       <div className="reader-bar">
         <Link href="/cantiques" aria-label={t.hymns}><ChevronLeft size={20} /></Link>
         <b style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
