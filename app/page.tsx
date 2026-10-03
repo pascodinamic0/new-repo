@@ -23,7 +23,7 @@ export default function HomePage() {
     { href: "/lecons", title: t.lessons, icon: GraduationCap, tone: "t-lessons" },
     { href: "/traduction", title: t.translate, icon: Languages, tone: "t-translate" },
     { href: "/communaute", title: t.community, icon: Users, tone: "t-community" },
-    { href: "/communaute#rdv", title: t.events, icon: Calendar, tone: "t-events" },
+    { href: "/communaute#rdv", title: locale === "fr" ? "Agenda" : "Events", icon: Calendar, tone: "t-events" },
     { href: "/cantiques", title: locale === "fr" ? "Média" : "Media", icon: Video, tone: "t-media" },
     { href: "/plus", title: locale === "fr" ? "Plus" : "More", icon: MoreHorizontal, tone: "t-more" },
   ]

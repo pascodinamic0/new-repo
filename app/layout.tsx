@@ -1,12 +1,11 @@
 import type { Metadata, Viewport } from "next"
-import { Fraunces, Outfit } from "next/font/google"
+import { Newsreader } from "next/font/google"
 import { cookies } from "next/headers"
 import "./globals.css"
 import { LocaleProvider } from "@/components/locale"
 import { Shell } from "@/components/Shell"
 
-const sans = Outfit({ subsets: ["latin"], variable: "--font-sans" })
-const display = Fraunces({ subsets: ["latin"], variable: "--font-display" })
+const verse = Newsreader({ subsets: ["latin"], weight: ["400", "600"], variable: "--font-verse", display: "swap" })
 
 export const metadata: Metadata = {
   title: "MTUSDA",
@@ -27,7 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const jar = await cookies()
   const locale = jar.get("mtusda_locale")?.value === "en" ? "en" : "fr"
   return (
-    <html lang={locale} className={`${sans.variable} ${display.variable}`}>
+    <html lang={locale} className={`${verse.variable}`}>
       <body>
         <LocaleProvider initial={locale}>
           <Shell>{children}</Shell>
