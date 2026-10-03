@@ -1,9 +1,13 @@
 "use client"
 import Link from "next/link"
-import { BookOpen, GraduationCap, Library, Music, Users } from "lucide-react"
+import { BookOpen, Calendar, GraduationCap, Languages, MoreHorizontal, Music, Users, Video } from "lucide-react"
 import { useCopy, useLocale } from "@/components/locale"
 
-const verse = {
+const lamp = {
+  fr: { ref: "Psaume 119:105", text: "Ta parole est une lampe à mes pieds, et une lumière sur mon sentier." },
+  en: { ref: "Psalm 119:105", text: "Thy word is a lamp unto my feet, and a light unto my path." },
+}
+const daily = {
   fr: { ref: "Jean 3:16", text: "Car Dieu a tant aimé le monde qu'il a donné son Fils unique, afin que quiconque croit en lui ne périsse point, mais qu'il ait la vie éternelle.", href: "/bible/john/3?v=16" },
   en: { ref: "John 3:16", text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.", href: "/bible/john/3?v=16" },
 }
@@ -11,59 +15,59 @@ const verse = {
 export default function HomePage() {
   const t = useCopy()
   const { locale } = useLocale()
-  const v = verse[locale]
-  const features = [
-    { href: "/bible", title: t.bible, text: locale === "fr" ? "Louis Segond 1910, lecture et recherche." : "King James Version, reading and search.", icon: BookOpen },
-    { href: "/cantiques", title: t.hymns, text: locale === "fr" ? "Paroles françaises et anglaises, audio." : "French and English lyrics, with audio.", icon: Music },
-    { href: "/lecons", title: t.lessons, text: locale === "fr" ? "Leçons exemples à lire, pas un cahier officiel." : "Sample lessons you can read, not an official quarterly.", icon: GraduationCap },
-    { href: "/communaute", title: t.community, text: locale === "fr" ? "Annonces, rendez-vous et messages." : "Announcements, gatherings, and posts.", icon: Users },
+  const v = lamp[locale]
+  const d = daily[locale]
+  const tiles = [
+    { href: "/bible", title: t.bible, icon: BookOpen, tone: "t-bible" },
+    { href: "/cantiques", title: t.hymns, icon: Music, tone: "t-hymns" },
+    { href: "/lecons", title: t.lessons, icon: GraduationCap, tone: "t-lessons" },
+    { href: "/traduction", title: t.translate, icon: Languages, tone: "t-translate" },
+    { href: "/communaute", title: t.community, icon: Users, tone: "t-community" },
+    { href: "/communaute#rdv", title: t.events, icon: Calendar, tone: "t-events" },
+    { href: "/cantiques", title: locale === "fr" ? "Média" : "Media", icon: Video, tone: "t-media" },
+    { href: "/plus", title: locale === "fr" ? "Plus" : "More", icon: MoreHorizontal, tone: "t-more" },
   ]
   return (
     <div>
       <section className="hero">
-        <img src="/images/light.jpg" alt="" />
+        <img src="/images/bible.jpg" alt="" />
         <div className="shade" />
         <div className="copy">
-          <p className="kicker">MTUSDA · {t.tag}</p>
-          <h1>{t.hero}</h1>
-          <p>{t.heroSub}</p>
+          <p className="kicker">{v.ref}</p>
+          <h1>{v.text}</h1>
         </div>
       </section>
-      <div className="section-title"><h2>{t.sabbath}</h2></div>
-      <div className="panel sabbath">
-        <div>
-          <b>{locale === "fr" ? "Prochain culte" : "Next worship"}</b>
-          <div className="muted">{t.hours}</div>
-        </div>
-        <Link className="btn" href="/eglise">{t.open}</Link>
-      </div>
-      <div className="grid-2" style={{ marginTop: 14 }}>
-        {features.map(item => (
-          <Link key={item.href} href={item.href} className="card feature">
-            <span className="iconblob"><item.icon size={18} /></span>
-            <h3>{item.title}</h3>
-            <div className="muted">{item.text}</div>
+      <div className="tiles">
+        {tiles.map(item => (
+          <Link key={item.tone} href={item.href} className={`tile ${item.tone}`}>
+            <item.icon size={22} />
+            <span>{item.title}</span>
           </Link>
         ))}
       </div>
-      <div className="section-title"><h2>{v.ref}</h2><Link href={v.href}>{t.read}</Link></div>
-      <Link href={v.href} className="panel" data-testid="verse-of-day">
-        <p style={{ fontFamily: "var(--display)", fontSize: 22, lineHeight: 1.4, marginTop: 0 }}>{v.text}</p>
+      <Link href={d.href} className="verse-card" data-testid="verse-of-day">
+        <p className="kicker" style={{ color: "var(--gold)" }}>{locale === "fr" ? "Verset du jour" : "Verse of the day"}</p>
+        <p>{d.text}</p>
+        <b>{d.ref}</b>
       </Link>
-      <div className="row" style={{ marginTop: 16 }}>
-        <Link className="btn-ghost" href="/traduction">{t.translate}</Link>
-        <Link className="btn-ghost" href="/livres">{t.books}</Link>
-        <Link className="btn-ghost" href="/compte">{t.account}</Link>
-      </div>
-      <div className="section-title"><h2>{t.books}</h2><Link href="/livres">{t.open}</Link></div>
-      <Link href="/livres" className="card" style={{ display: "grid", gridTemplateColumns: "120px 1fr", gap: 12, alignItems: "center" }}>
-        <img src="/images/bible.jpg" alt="" style={{ height: 88, width: 120, objectFit: "cover", borderRadius: 14 }} />
-        <div>
-          <Library size={16} />
-          <h3 style={{ margin: "6px 0" }}>{locale === "fr" ? "Steps to Christ, The Great Controversy, The Desire of Ages" : "Steps to Christ, The Great Controversy, The Desire of Ages"}</h3>
-          <div className="muted">{t.englishBooks}</div>
+      <div className="today">
+        <Link href="/bible/john/3">
+          <span className="muted">{locale === "fr" ? "Lecture du jour" : "Today's reading"}</span>
+          <b>{locale === "fr" ? "Jean 3" : "John 3"}</b>
+        </Link>
+        <Link href="/cantiques/amazing-grace">
+          <span className="muted">{t.hymns}</span>
+          <b>{locale === "fr" ? "Grâce étonnante" : "Amazing Grace"}</b>
+        </Link>
+        <Link href="/lecons/sabbat-cadeau">
+          <span className="muted">{t.lessons}</span>
+          <b>{locale === "fr" ? "Le sabbat, un cadeau" : "The Sabbath, a gift"}</b>
+        </Link>
+        <div className="panel" style={{ margin: 0 }}>
+          <span className="muted">{t.sabbath}</span>
+          <b>{t.hours}</b>
         </div>
-      </Link>
+      </div>
     </div>
   )
 }

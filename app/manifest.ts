@@ -5,8 +5,8 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "MTUSDA",
     start_url: "/",
     display: "standalone",
-    background_color: "#143d32",
-    theme_color: "#143d32",
+    background_color: "#102848",
+    theme_color: "#102848",
     lang: "fr",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },

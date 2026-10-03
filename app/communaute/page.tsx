@@ -10,7 +10,6 @@ type User = { id: string; name: string; role: string }
 export default function CommunityPage() {
   const { locale } = useLocale()
   const t = useCopy()
-  const [tab, setTab] = useState<"ann" | "events" | "posts">("ann")
   const [anns, setAnns] = useState<Ann[]>([])
   const [events, setEvents] = useState<Ev[]>([])
   const [posts, setPosts] = useState<Post[]>([])
@@ -44,47 +43,59 @@ export default function CommunityPage() {
     load()
   }
 
+  const when = (iso: string) => new Date(iso).toLocaleString(locale === "fr" ? "fr-FR" : "en-GB", { timeZone: "Africa/Kinshasa", weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })
+
   return (
     <div>
       <p className="kicker">MTUSDA · {t.city}</p>
       <div className="section-title"><h2>{t.community}</h2></div>
       <p className="muted">{t.communityLead}</p>
-      <div className="chips">
-        <button className={tab === "ann" ? "chip on" : "chip"} onClick={() => setTab("ann")}>{t.announce}</button>
-        <button className={tab === "events" ? "chip on" : "chip"} onClick={() => setTab("events")}>{t.events}</button>
-        <button className={tab === "posts" ? "chip on" : "chip"} onClick={() => setTab("posts")}>{t.posts}</button>
-      </div>
       {toast && <div className="toast" role="status">{toast}</div>}
-      {tab === "ann" && anns.map(ann => (
-        <article key={ann.id} className="panel" style={{ marginTop: 12 }} data-testid="announcement">
-          <h3>{locale === "fr" ? ann.title_fr : ann.title_en}</h3>
-          <p>{locale === "fr" ? ann.body_fr : ann.body_en}</p>
-        </article>
-      ))}
-      {tab === "events" && events.map(event => (
-        <article key={event.id} className="panel" style={{ marginTop: 12 }} data-testid="event">
-          <div className="muted">{new Date(event.starts_at).toLocaleString(locale === "fr" ? "fr-FR" : "en-GB", { timeZone: "Africa/Kinshasa" })} · {event.location}</div>
-          <h3>{locale === "fr" ? event.title_fr : event.title_en}</h3>
-          <p>{locale === "fr" ? event.description_fr : event.description_en}</p>
-        </article>
-      ))}
-      {tab === "posts" && (
-        <div>
-          {user ? (
-            <form onSubmit={sendPost} className="panel" style={{ margin: "12px 0" }}>
-              <textarea data-testid="post-box" value={text} onChange={e => setText(e.target.value)} placeholder={t.postPlaceholder} />
-              <button className="btn" type="submit">{t.publish}</button>
-            </form>
-          ) : <p className="muted"><a href="/compte">{t.login}</a></p>}
-          {posts.map(post => (
-            <article key={post.id} className="panel" style={{ marginTop: 10 }} data-testid="post">
-              <b>{post.display_name}</b>
-              <p>{post.body}</p>
-            </article>
-          ))}
-        </div>
-      )}
-      {user?.role === "admin" && tab === "ann" && (
+
+      <div className="section-title" id="mur"><h2>{t.posts}</h2></div>
+      {user ? (
+        <form onSubmit={sendPost} className="panel">
+          <textarea data-testid="post-box" value={text} onChange={e => setText(e.target.value)} placeholder={t.postPlaceholder} />
+          <button className="btn" type="submit">{locale === "fr" ? "Publier" : "Post"}</button>
+        </form>
+      ) : <p className="muted"><a href="/compte">{t.login}</a></p>}
+      <div className="feed">
+        {posts.map(post => (
+          <article key={post.id} className="panel" data-testid="post">
+            <div className="person">
+              <span className="avatar">{(post.display_name || "?").slice(0, 1).toUpperCase()}</span>
+              <div>
+                <b>{post.display_name}</b>
+                <div className="muted" style={{ fontSize: 13 }}>{when(post.created_at)}{post.kind === "prayer" ? (locale === "fr" ? " · prière" : " · prayer") : ""}</div>
+              </div>
+            </div>
+            <p className="post-body">{post.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="section-title" id="annonces"><h2>{t.announce}</h2></div>
+      <div className="feed">
+        {anns.map(ann => (
+          <article key={ann.id} className="panel" data-testid="announcement">
+            <h3>{locale === "fr" ? ann.title_fr : ann.title_en}</h3>
+            <p>{locale === "fr" ? ann.body_fr : ann.body_en}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="section-title" id="rdv"><h2>{t.events}</h2></div>
+      <div className="feed">
+        {events.map(event => (
+          <article key={event.id} className="panel" data-testid="event">
+            <div className="muted">{when(event.starts_at)} · {event.location}</div>
+            <h3>{locale === "fr" ? event.title_fr : event.title_en}</h3>
+            <p>{locale === "fr" ? event.description_fr : event.description_en}</p>
+          </article>
+        ))}
+      </div>
+
+      {user?.role === "admin" && (
         <form onSubmit={sendAnn} className="panel" style={{ marginTop: 16 }}>
           <h3>{t.publish}</h3>
           <input className="field" placeholder="Titre FR" value={form.title_fr} onChange={e => setForm({ ...form, title_fr: e.target.value })} />

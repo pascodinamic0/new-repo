@@ -20,6 +20,7 @@ test("four pillars in French and English", async ({ page }, info) => {
 
   await page.goto("/cantiques/amazing-grace")
   await expect(page.getByTestId("lyrics")).toContainText("Grâce")
+  await page.goto("/cantiques/what-a-friend")
   await page.getByTestId("play").click()
   await expect.poll(async () => page.locator("audio").evaluate((a: HTMLAudioElement) => !a.paused && a.readyState >= 2)).toBeTruthy()
 

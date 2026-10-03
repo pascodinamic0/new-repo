@@ -1,24 +1,16 @@
 "use client"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useEffect } from "react"
-import { BookOpen, Church, Home, Languages, Music, Users, GraduationCap, Library } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+import { FormEvent, useEffect, useState } from "react"
+import { Bell, BookOpen, Church, GraduationCap, Home, Languages, Library, Music, Users } from "lucide-react"
 import { useCopy, useLocale } from "./locale"
-
-function Mark() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 48 48" aria-hidden>
-      <path d="M8 18c8-8 24-8 32 0" fill="none" stroke="#e6d3a3" strokeWidth="3" strokeLinecap="round"/>
-      <path d="M24 16 L10 24 L10 38 L24 32 Z" fill="#f6efe6"/>
-      <path d="M24 16 L38 24 L38 38 L24 32 Z" fill="#e7c9a0"/>
-    </svg>
-  )
-}
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname()
+  const router = useRouter()
   const { locale, setLocale } = useLocale()
   const t = useCopy()
+  const [q, setQ] = useState("")
   useEffect(() => {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {})
   }, [])
@@ -34,32 +26,49 @@ export function Shell({ children }: { children: React.ReactNode }) {
     { href: "/eglise", label: t.church, icon: Church },
     { href: "/traduction", label: t.translate, icon: Languages },
     { href: "/compte", label: t.account, icon: Users },
+    { href: "/plus", label: locale === "fr" ? "Plus" : "More", icon: Library },
   ]
   const active = (href: string) => href === "/" ? path === "/" : path.startsWith(href)
+  function search(e: FormEvent) {
+    e.preventDefault()
+    const query = q.trim()
+    router.push(query ? `/bible?q=${encodeURIComponent(query)}` : "/bible")
+  }
+  const Lang = ({ test }: { test: string }) => (
+    <div className="lang">
+      <button className={locale === "fr" ? "on" : ""} data-testid={test === "side" ? "lang-fr" : "lang-fr-mobile"} onClick={() => setLocale("fr")}>FR</button>
+      <button className={locale === "en" ? "on" : ""} data-testid="lang-en" onClick={() => setLocale("en")}>EN</button>
+    </div>
+  )
   return (
     <div className="app">
       <aside className="sidebar">
-        <div className="sideword">MTUSDA</div>
-        {[...items, ...more].map(item => (
+        <img className="side-logo" src="/logo.png" alt="MTUSDA" />
+        {[...items, ...more.filter(m => m.href !== "/plus")].map(item => (
           <Link key={item.href} href={item.href} className={active(item.href) ? "active" : ""}>{item.label}</Link>
         ))}
-        <div style={{ marginTop: "auto" }} className="lang">
-          <button className={locale === "fr" ? "on" : ""} data-testid="lang-fr" onClick={() => setLocale("fr")}>FR</button>
-          <button className={locale === "en" ? "on" : ""} data-testid="lang-en" onClick={() => setLocale("en")}>EN</button>
-        </div>
+        <Lang test="side" />
       </aside>
-      <div>
+      <div className="frame">
         <header className="topbar">
-          <Link href="/" className="brand">
-            <span className="mark"><Mark /></span>
-            <span><b>MTUSDA</b><span>{t.city}</span></span>
+          <Link href="/" className="brand" aria-label="MTUSDA">
+            <span className="mark"><img src="/logo-mark.png" alt="" /></span>
+            <span><b>MTUSDA</b></span>
           </Link>
+          <form className="searchform" onSubmit={search} role="search">
+            <input
+              aria-label={t.search}
+              placeholder={locale === "fr" ? "Chercher" : "Search"}
+              value={q}
+              onChange={e => setQ(e.target.value)}
+            />
+          </form>
           <div className="tools">
-            <div className="lang">
-              <button className={locale === "fr" ? "on" : ""} data-testid="lang-fr-mobile" onClick={() => setLocale("fr")}>FR</button>
-              <button className={locale === "en" ? "on" : ""} data-testid="lang-en" onClick={() => setLocale("en")}>EN</button>
-            </div>
-            <Link href="/compte" className="iconbtn" aria-label={t.account}><Users size={18} /></Link>
+            <Link href="/communaute" className="iconbtn" aria-label={t.announce}>
+              <Bell size={18} />
+              <span className="dot" />
+            </Link>
+            <Lang test="mobile" />
           </div>
         </header>
         <main className="main">{children}</main>
@@ -67,7 +76,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <nav className="bottom">
         {items.map(item => (
           <Link key={item.href} href={item.href} className={active(item.href) ? "active" : ""}>
-            <item.icon size={18} />
+            <item.icon size={20} />
             <span>{item.label}</span>
           </Link>
         ))}
