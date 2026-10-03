@@ -122,7 +122,7 @@ export default function ChapterPage() {
       </div>
       <div className="listen-bar">
         {chapter > 1 ? <Link href={`/bible/${book.id.toLowerCase()}/${chapter - 1}`} aria-label={locale === "fr" ? "Chapitre précédent" : "Previous chapter"}><ChevronLeft size={22} /></Link> : <span />}
-        <button type="button" className="go" data-testid="play" aria-label={speech.on ? "Pause" : "Play"} onClick={() => speech.toggle(lines)}>
+        <button type="button" className={speech.on ? "go on" : "go"} data-testid="play" aria-label={speech.on ? "Pause" : "Play"} onClick={() => speech.toggle(lines)}>
           {speech.on ? <Pause size={26} /> : <Play size={26} />}
         </button>
         {chapter < book.chapters ? <Link href={`/bible/${book.id.toLowerCase()}/${chapter + 1}`} aria-label={locale === "fr" ? "Chapitre suivant" : "Next chapter"}><ChevronRight size={22} /></Link> : <span />}

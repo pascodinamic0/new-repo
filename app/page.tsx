@@ -34,8 +34,8 @@ export default function HomePage() {
         </div>
       </section>
       <div className="tiles">
-        {tiles.map(item => (
-          <Link key={item.tone} href={item.href} className={`tile ${item.tone}`}>
+        {tiles.map((item, i) => (
+          <Link key={item.tone} href={item.href} className={`tile ${item.tone}`} style={{ animationDelay: `${i * 70}ms` }}>
             <item.icon size={22} />
             <span>{item.title}</span>
           </Link>

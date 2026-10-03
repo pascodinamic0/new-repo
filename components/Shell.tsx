@@ -12,9 +12,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const t = useCopy()
   const [q, setQ] = useState("")
   const [searchOpen, setSearchOpen] = useState(false)
+  const [splash, setSplash] = useState<"in" | "out" | "off">("off")
   const field = useRef<HTMLInputElement>(null)
   useEffect(() => {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {})
+  }, [])
+  useEffect(() => {
+    let seen = false
+    try { seen = sessionStorage.getItem("mtusda-splash") === "1" } catch { /* private mode */ }
+    if (seen) return
+    try { sessionStorage.setItem("mtusda-splash", "1") } catch { /* ignore */ }
+    setSplash("in")
+    const hold = window.setTimeout(() => setSplash("out"), 1100)
+    const done = window.setTimeout(() => setSplash("off"), 1550)
+    return () => { window.clearTimeout(hold); window.clearTimeout(done) }
   }, [])
   useEffect(() => {
     if (searchOpen) field.current?.focus()
@@ -93,7 +104,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </form>
           </div>
         )}
-        <main className="main">{children}</main>
+        <main className="main"><div key={path} className="page">{children}</div></main>
       </div>
       <nav className="bottom">
         {items.map(item => (
@@ -103,6 +114,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </Link>
         ))}
       </nav>
+      {splash !== "off" && (
+        <div className={splash === "out" ? "splash out" : "splash"} aria-hidden="true">
+          <div className="splash-mark">
+            <img src="/logo-mark.png" alt="" />
+            <b>MTUSDA</b>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

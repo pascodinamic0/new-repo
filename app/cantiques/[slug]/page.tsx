@@ -86,7 +86,7 @@ export default function HymnPage() {
       <p className="muted">{hymn.rights}</p>
       <div className="listen-bar">
         <Link href={`/cantiques/${prev.slug}`} aria-label={locale === "fr" ? "Précédent" : "Previous"}><ChevronLeft size={22} /></Link>
-        <button type="button" className="go" data-testid="play" aria-label={speech.on ? "Pause" : "Play"} onClick={() => speech.toggle(lines)}>
+        <button type="button" className={speech.on ? "go on" : "go"} data-testid="play" aria-label={speech.on ? "Pause" : "Play"} onClick={() => speech.toggle(lines)}>
           {speech.on ? <Pause size={26} /> : <Play size={26} />}
         </button>
         <Link href={`/cantiques/${next.slug}`} aria-label={locale === "fr" ? "Suivant" : "Next"}><ChevronRight size={22} /></Link>
