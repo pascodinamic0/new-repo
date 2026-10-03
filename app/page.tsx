@@ -1,19 +1,69 @@
-"use client";
-import {useMemo,useState} from "react";
-import {BookOpen,Music,GraduationCap,Users,Languages,Home,Bookmark,Heart,Play,Pause,ChevronRight,CalendarDays,FileText} from "lucide-react";
-type Tab="home"|"bible"|"music"|"lessons"|"community";
-const verses=[["Genesis 1:1","In the beginning God created the heaven and the earth."],["Genesis 1:2","And the earth was without form, and void; and darkness was upon the face of the deep."],["Genesis 1:3","And God said, Let there be light: and there was light."]];
-const song={title:"Amazing Grace",src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"};
-export default function Page(){
- const [tab,setTab]=useState<Tab>("home"),[q,setQ]=useState(""),[saved,setSaved]=useState<string[]>([]),[playing,setPlaying]=useState(false),[translation,setTranslation]=useState(""),[translated,setTranslated]=useState("");
- const results=useMemo(()=>q.toLowerCase().includes("john 3:16")?[["John 3:16","For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life."]]:verses,[q]);
- const nav=(id:Tab)=>setTab(id);
- async function translate(){if(!translation.trim())return;const r=await fetch("/api/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text:translation})});const j=await r.json();setTranslated(j.translation||j.error||"Translation unavailable");}
- return <div className="shell"><header className="top"><div className="brand">Church App</div><div className="sub">Scripture · Music · Lessons · Community</div></header><main className="content">
- {tab==="home"&&<><section className="hero"><h1>Grow in the Word.</h1><p>Faith resources for everyday life. Public content works without an account.</p></section><div className="grid">{[["Bible",BookOpen,"Read and search Scripture","bible"],["Hymns & Songs",Music,"Lyrics and audio","music"],["Lessons",GraduationCap,"Study books and lessons","lessons"],["Community",Users,"Announcements and events","community"],["Translator",Languages,"Translate church content","home"]].map(([n,I,d,t])=><button className="card" key={n as string} onClick={()=>nav(t as Tab)}><div className="icon"><I size={20}/></div><h3>{n as string}</h3><div className="muted">{d as string}</div></button>)}</div><div className="section">Quick access</div><button className="card" style={{width:"100%"}} onClick={()=>nav("bible")}><div className="between"><div><b>John 3:16</b><div className="muted">Open directly in the Bible</div></div><ChevronRight/></div></button><div className="section">Translator</div><div className="card"><textarea className="search" rows={4} placeholder="Enter English text..." value={translation} onChange={e=>setTranslation(e.target.value)}/><button className="cta" onClick={translate}>Translate to French</button>{translated&&<p>{translated}</p>}</div></>}
- {tab==="bible"&&<><div className="between"><h2>Bible</h2><span className="muted">KJV</span></div><input className="search" placeholder="Search reference, e.g. John 3:16" value={q} onChange={e=>setQ(e.target.value)}/><div className="notice">Search is wired for the Bible data layer. The production database will hold the complete legally distributable KJV dataset.</div>{results.map(([ref,text])=><div className="verse" key={ref}><div className="between"><div><b>{ref}</b> {text}</div><button className="pill" onClick={()=>setSaved(v=>v.includes(ref)?v.filter(x=>x!==ref):[...v,ref])}>{saved.includes(ref)?<Heart fill="currentColor"/>:<Bookmark/>}</button></div></div>)}</>}
- {tab==="music"&&<><div className="between"><h2>Hymns & Songs</h2><Music/></div><div className="notice">Audio playback is functional. Replace the demo URL with church-owned or licensed recordings.</div><div className="card"><div className="between"><div><b>{song.title}</b><div className="muted">Demo audio source</div></div><button className="cta" onClick={()=>setPlaying(!playing)}>{playing?<Pause/>:<Play/>}</button></div>{playing&&<audio style={{width:"100%",marginTop:12}} controls autoPlay src={song.src} onEnded={()=>setPlaying(false)}/>}</div></>}
- {tab==="lessons"&&<><div className="between"><h2>Lessons</h2><GraduationCap/></div>{["Faith & Practice","Living the Word"].map(x=><div className="card" key={x} style={{marginBottom:12}}><h3>{x}</h3><div className="muted">Lesson book · ready for PDF/document content</div><p>Lessons will support structured chapters, teacher notes, documents and downloadable resources.</p><button className="pill">Open lesson <ChevronRight size={15}/></button></div>)}</>}
- {tab==="community"&&<><div className="between"><h2>Community</h2><Users/></div><div className="card"><Users/><h3>Church community</h3><p className="muted">Public announcements and events are available without an account. Authenticated members can later post, comment and manage their saved resources.</p></div><div className="grid"><div className="card"><CalendarDays/><h3>Events</h3><div className="muted">Services and activities.</div></div><div className="card"><FileText/><h3>Announcements</h3><div className="muted">Church updates.</div></div></div></>}
- </main><nav className="bottom">{[["home",Home,"Home"],["bible",BookOpen,"Bible"],["music",Music,"Music"],["lessons",GraduationCap,"Lessons"],["community",Users,"Community"]].map(([id,I,n])=><button key={id as string} className={"navBtn "+(tab===id?"active":"")} onClick={()=>nav(id as Tab)}><I/><span>{n as string}</span></button>)}</nav></div>
+"use client"
+import Link from "next/link"
+import { BookOpen, GraduationCap, Library, Music, Users } from "lucide-react"
+import { useCopy, useLocale } from "@/components/locale"
+
+const verse = {
+  fr: { ref: "Jean 3:16", text: "Car Dieu a tant aimé le monde qu'il a donné son Fils unique, afin que quiconque croit en lui ne périsse point, mais qu'il ait la vie éternelle.", href: "/bible/john/3?v=16" },
+  en: { ref: "John 3:16", text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.", href: "/bible/john/3?v=16" },
+}
+
+export default function HomePage() {
+  const t = useCopy()
+  const { locale } = useLocale()
+  const v = verse[locale]
+  const features = [
+    { href: "/bible", title: t.bible, text: locale === "fr" ? "Louis Segond 1910, lecture et recherche." : "King James Version, reading and search.", icon: BookOpen },
+    { href: "/cantiques", title: t.hymns, text: locale === "fr" ? "Paroles françaises et anglaises, audio." : "French and English lyrics, with audio.", icon: Music },
+    { href: "/lecons", title: t.lessons, text: locale === "fr" ? "Leçons exemples à lire, pas un cahier officiel." : "Sample lessons you can read, not an official quarterly.", icon: GraduationCap },
+    { href: "/communaute", title: t.community, text: locale === "fr" ? "Annonces, rendez-vous et messages." : "Announcements, gatherings, and posts.", icon: Users },
+  ]
+  return (
+    <div>
+      <section className="hero">
+        <img src="/images/light.jpg" alt="" />
+        <div className="shade" />
+        <div className="copy">
+          <p className="kicker">MTUSDA · {t.tag}</p>
+          <h1>{t.hero}</h1>
+          <p>{t.heroSub}</p>
+        </div>
+      </section>
+      <div className="section-title"><h2>{t.sabbath}</h2></div>
+      <div className="panel sabbath">
+        <div>
+          <b>{locale === "fr" ? "Prochain culte" : "Next worship"}</b>
+          <div className="muted">{t.hours}</div>
+        </div>
+        <Link className="btn" href="/eglise">{t.open}</Link>
+      </div>
+      <div className="grid-2" style={{ marginTop: 14 }}>
+        {features.map(item => (
+          <Link key={item.href} href={item.href} className="card feature">
+            <span className="iconblob"><item.icon size={18} /></span>
+            <h3>{item.title}</h3>
+            <div className="muted">{item.text}</div>
+          </Link>
+        ))}
+      </div>
+      <div className="section-title"><h2>{v.ref}</h2><Link href={v.href}>{t.read}</Link></div>
+      <Link href={v.href} className="panel" data-testid="verse-of-day">
+        <p style={{ fontFamily: "var(--display)", fontSize: 22, lineHeight: 1.4, marginTop: 0 }}>{v.text}</p>
+      </Link>
+      <div className="row" style={{ marginTop: 16 }}>
+        <Link className="btn-ghost" href="/traduction">{t.translate}</Link>
+        <Link className="btn-ghost" href="/livres">{t.books}</Link>
+        <Link className="btn-ghost" href="/compte">{t.account}</Link>
+      </div>
+      <div className="section-title"><h2>{t.books}</h2><Link href="/livres">{t.open}</Link></div>
+      <Link href="/livres" className="card" style={{ display: "grid", gridTemplateColumns: "120px 1fr", gap: 12, alignItems: "center" }}>
+        <img src="/images/bible.jpg" alt="" style={{ height: 88, width: 120, objectFit: "cover", borderRadius: 14 }} />
+        <div>
+          <Library size={16} />
+          <h3 style={{ margin: "6px 0" }}>{locale === "fr" ? "Steps to Christ, The Great Controversy, The Desire of Ages" : "Steps to Christ, The Great Controversy, The Desire of Ages"}</h3>
+          <div className="muted">{t.englishBooks}</div>
+        </div>
+      </Link>
+    </div>
+  )
 }

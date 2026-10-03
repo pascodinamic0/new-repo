@@ -1,0 +1,123 @@
+[
+  {
+    "slug": "sabbat-cadeau",
+    "sample": true,
+    "title_fr": "Le sabbat, un cadeau",
+    "title_en": "The Sabbath, a gift",
+    "summary_fr": "Leçon exemple pour l'école du sabbat. L'église peut la remplacer par le cahier qu'elle a le droit de diffuser.",
+    "summary_en": "Sample Sabbath School lesson. The church can replace it with a quarterly it has the right to share.",
+    "sections": [
+      {
+        "id": "sab",
+        "title_fr": "Samedi — ouvrir le jour",
+        "title_en": "Sabbath — open the day",
+        "body_fr": "À Kinshasa, le sabbat ne commence pas par une montre, il commence par un arrêt. On pose le téléphone, on salue la maison, on se souvient que le monde a été fait et qu'il a aussi été racheté. Lisez Genèse 2:1-3. Le septième jour n'est pas une punition : c'est le premier cadeau, offert avant la chute. Cette semaine, demandez à un enfant de la classe ce qui, pour lui, rend un jour « différent ». Écrivez une phrase, pas un sermon.",
+        "body_en": "In Kinshasa the Sabbath does not start with a clock. It starts when we stop. We set the phone down, greet the household, and remember that the world was made and also redeemed. Read Genesis 2:1-3. The seventh day is not a punishment. It is the first gift, given before the fall. This week, ask a child in the class what makes a day feel different. Write one sentence, not a sermon."
+      },
+      {
+        "id": "dim",
+        "title_fr": "Dimanche — le travail a une fin",
+        "title_en": "Sunday — work has an edge",
+        "body_fr": "Le sabbat donne une rive au travail. Sans rive, la ville avale les jours : taxi, marché, cours du soir, petit commerce. Exode 20:8-11 ne méprise pas le labeur. Il dit que le labeur n'est pas Dieu. Notez trois tâches que vous reportez souvent au samedi. Choisissez-en une que vous finirez vendredi, même imparfaitement.",
+        "body_en": "The Sabbath gives work a shoreline. Without one, the city swallows the days: the taxi, the market, night classes, the small shop. Exodus 20:8-11 does not despise labor. It says labor is not God. Write down three tasks you often push into Saturday. Choose one you will finish on Friday, even imperfectly."
+      },
+      {
+        "id": "mer",
+        "title_fr": "Mercredi — se souvenir",
+        "title_en": "Wednesday — remember",
+        "body_fr": "Deutéronome 5 relie le sabbat à la sortie d'Égypte. On ne garde pas un jour pour prouver qu'on est meilleurs. On le garde parce qu'on a été libérés. À table, racontez en cinq minutes une délivrance ordinaire de cette année : une dette allégée, une réconciliation, un examen réussi, une maladie traversée. La mémoire est déjà un culte.",
+        "body_en": "Deuteronomy 5 ties the Sabbath to the exodus. We do not keep a day to prove we are better. We keep it because we were set free. At the table, spend five minutes on one ordinary deliverance from this year: a lighter debt, a reconciliation, an exam passed, an illness endured. Memory is already worship."
+      },
+      {
+        "id": "ven",
+        "title_fr": "Vendredi — préparer la joie",
+        "title_en": "Friday — prepare the joy",
+        "body_fr": "La préparation n'est pas de l'anxiété. C'est de la gentillesse envers le lendemain. Préparez le riz ou les chikwangues, repassez une chemise, envoyez un message à quelqu'un qui vient seul à l'église. Marc 2:27 rappelle que le sabbat est fait pour l'homme. Une maison prête est une façon de dire : tu peux entrer et te reposer.",
+        "body_en": "Preparation is not anxiety. It is kindness toward tomorrow. Cook the rice, press a shirt, message someone who comes to church alone. Mark 2:27 says the Sabbath was made for people. A ready house is a way of saying: you may come in and rest."
+      },
+      {
+        "id": "culte",
+        "title_fr": "Samedi suivant — partager",
+        "title_en": "Next Sabbath — share",
+        "body_fr": "En classe, lisez Ésaïe 58:13-14 sans ajouter de règles inventées. Demandez : qu'est-ce qui, cette semaine, a ressemblé à un délice, et qu'est-ce qui a ressemblé à un poids ? Terminez par une prière courte pour les marchands, les infirmiers et les chauffeurs qui n'ont pas pu s'arrêter. Cette leçon est un exemple. Elle n'est pas le cahier trimestriel officiel.",
+        "body_en": "In class, read Isaiah 58:13-14 without adding invented rules. Ask what this week felt like delight, and what felt like a burden. Close with a short prayer for traders, nurses, and drivers who could not stop. This lesson is a sample. It is not the official quarterly."
+      }
+    ]
+  },
+  {
+    "slug": "priere-ville",
+    "sample": true,
+    "title_fr": "Prier dans la ville",
+    "title_en": "Praying in the city",
+    "summary_fr": "Leçon exemple sur la prière, écrite pour MTUSDA. À remplacer quand l'église dépose son propre document.",
+    "summary_en": "Sample lesson on prayer, written for MTUSDA. Replace it when the church adds its own document.",
+    "sections": [
+      {
+        "id": "sab",
+        "title_fr": "Samedi — une phrase vraie",
+        "title_en": "Sabbath — one true sentence",
+        "body_fr": "Matthieu 6:5-8 ne demande pas de belles formules. Il demande de ne pas jouer. Cette semaine, la pratique est petite : une phrase vraie, matin et soir. « J'ai peur du loyer. » « Merci pour le pain. » « Garde mon fils sur la route. » Dieu n'a pas besoin de théâtre. La classe non plus.",
+        "body_en": "Matthew 6:5-8 does not ask for beautiful formulas. It asks us not to perform. This week's practice is small: one true sentence, morning and evening. “I am afraid of the rent.” “Thank you for the bread.” “Keep my son on the road.” God does not need a performance. Neither does the class."
+      },
+      {
+        "id": "lun",
+        "title_fr": "Lundi — le Notre Père à Kinshasa",
+        "title_en": "Monday — the Lord's Prayer in Kinshasa",
+        "body_fr": "Relisez Matthieu 6:9-13 lentement. « Que ton règne vienne » concerne la commune autant que le ciel : l'eau, la justice, le pardon dans la concession. « Donne-nous aujourd'hui » refuse l'angoisse qui stocke tout et le mépris qui ne partage rien. Écrivez le verset qui vous arrête.",
+        "body_en": "Read Matthew 6:9-13 slowly. “Your kingdom come” is about the neighborhood as well as heaven: water, justice, forgiveness in the compound. “Give us today” refuses both the fear that hoards and the pride that will not share. Write down the line that stops you."
+      },
+      {
+        "id": "jeu",
+        "title_fr": "Jeudi — prier pour quelqu'un",
+        "title_en": "Thursday — pray a name",
+        "body_fr": "Choisissez une personne que vous ne contrôlez pas : un collègue, un voisin bruyant, un malade à l'hôpital général. Priez son nom à voix haute une fois. Jacques 5:16 lie la prière à la confession, pas au spectacle. Si vous avez blessé cette personne, la prière commence par une réparation, pas par un discours.",
+        "body_en": "Choose someone you do not control: a coworker, a loud neighbor, a patient at the general hospital. Say their name aloud once in prayer. James 5:16 ties prayer to confession, not to display. If you have hurt that person, prayer starts with repair, not with a speech."
+      },
+      {
+        "id": "culte",
+        "title_fr": "Samedi — la classe prie",
+        "title_en": "Sabbath — the class prays",
+        "body_fr": "En groupe, trois minutes de silence, puis chacun une phrase. Pas de tour de force. Terminez par le Notre Père ensemble, en français. Notez les sujets pour la réunion de prière du mercredi. Cette leçon est originale et provisoire.",
+        "body_en": "In the group, three minutes of quiet, then one sentence each. No performances. Finish the Lord's Prayer together. Write the requests for Wednesday's prayer meeting. This lesson is original and provisional."
+      }
+    ]
+  },
+  {
+    "slug": "servir-kinshasa",
+    "sample": true,
+    "title_fr": "Servir à Kinshasa",
+    "title_en": "Serving in Kinshasa",
+    "summary_fr": "Leçon exemple pour les ministères personnels, la jeunesse et la santé. Texte original, pas un cahier officiel.",
+    "summary_en": "Sample lesson for personal ministries, youth, and health. Original text, not an official quarterly.",
+    "sections": [
+      {
+        "id": "sab",
+        "title_fr": "Samedi — le plus proche",
+        "title_en": "Sabbath — the nearest person",
+        "body_fr": "Matthieu 25:31-40 ne commence pas par un projet. Il commence par une personne qui a faim, soif, ou honte. Dans votre rue, qui est invisible ? Un apprenti non payé, une veuve, un élève sans frais. La mission adventiste n'est pas un slogan. C'est un nom et une adresse.",
+        "body_en": "Matthew 25:31-40 does not begin with a project. It begins with a person who is hungry, thirsty, or ashamed. On your street, who is invisible? An unpaid apprentice, a widow, a student without fees. Adventist mission is not a slogan. It is a name and a place."
+      },
+      {
+        "id": "mar",
+        "title_fr": "Mardi — la santé comme service",
+        "title_en": "Tuesday — health as service",
+        "body_fr": "Le service de santé n'est pas une morale contre les voisins. C'est de l'eau propre, un repas simple, une visite à un malade, une marche ensemble avant la chaleur. Partagez une habitude utile sans humilier. 1 Corinthiens 6:19-20 parle du corps comme d'un lieu habité, pas comme d'un concours.",
+        "body_en": "Health ministry is not a lecture against the neighbors. It is clean water, a simple meal, a visit to someone ill, a walk together before the heat. Share one useful habit without shaming anyone. 1 Corinthians 6:19-20 speaks of the body as a place where God dwells, not as a contest."
+      },
+      {
+        "id": "jeu",
+        "title_fr": "Jeudi — les jeunes",
+        "title_en": "Thursday — the youth",
+        "body_fr": "Les JA ne sont pas un programme pour occuper les adolescents après le culte. Donnez-leur une responsabilité réelle : accueillir, chanter, porter un panier, apprendre un texte. Écoutez ce qui les épuise à l'école. Tite 2 demande aux aînés d'être crédibles, pas bruyants.",
+        "body_en": "AY is not a program to keep teenagers busy after church. Give them a real task: welcome people, sing, carry a basket, learn a text. Listen to what exhausts them at school. Titus 2 asks older members to be credible, not loud."
+      },
+      {
+        "id": "culte",
+        "title_fr": "Samedi — un geste",
+        "title_en": "Sabbath — one act",
+        "body_fr": "Avant de quitter la classe, décidez d'un seul geste commun pour la semaine : une visite, un repas, une cotisation claire pour un besoin nommé. Écrivez qui fait quoi. Dimanche, faites-le. Cette leçon est un modèle que l'église remplacera par ses propres documents autorisés.",
+        "body_en": "Before class ends, choose one shared act for the week: a visit, a meal, a clear collection for a named need. Write who does what. On Sunday, do it. This lesson is a pattern the church will replace with documents it is allowed to distribute."
+      }
+    ]
+  }
+]
