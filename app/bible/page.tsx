@@ -47,10 +47,24 @@ export default function BiblePage() {
 
   return (
     <div>
-      <p className="kicker">{version === "lsg" ? t.versionLsg : t.versionKjv}</p>
       <div className="section-title"><h2>{t.bible}</h2></div>
-      <form onSubmit={onSubmit}>
-        <input data-testid="bible-search" className="search" value={q} onChange={e => setQ(e.target.value)} placeholder={t.search} />
+      <form onSubmit={onSubmit} role="search" aria-label={t.search}>
+        <input
+          data-testid="bible-search"
+          className="search"
+          type="search"
+          value={q}
+          onChange={e => setQ(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === "Enter") {
+              e.preventDefault()
+              void run(q)
+            }
+          }}
+          placeholder={t.search}
+          aria-label={t.search}
+          enterKeyHint="search"
+        />
       </form>
       {msg && <p className="muted">{msg}</p>}
       {hits.map(hit => {
