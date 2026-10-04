@@ -50,6 +50,19 @@ export default function CommunityPage() {
       <p className="kicker">MTUSDA · {t.city}</p>
       <div className="section-title"><h2>{t.community}</h2></div>
       <p className="muted">{t.communityLead}</p>
+      <div className="panel" style={{ marginTop: 8 }}>
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <div>
+            <h3>{locale === "fr" ? "Découvrir l’Église adventiste" : "Discover the Adventist Church"}</h3>
+            <p className="muted" style={{ margin: 0 }}>
+              {locale === "fr"
+                ? "Courtes présentations, écrites pour l’application. Liens vers AskanAdventistFriend."
+                : "Short explainers, written for the app. Links to AskanAdventistFriend."}
+            </p>
+          </div>
+          <a className="btn" href="/eglise/adventistes">{locale === "fr" ? "Ouvrir" : "Open"}</a>
+        </div>
+      </div>
       {toast && <div className="toast" role="status">{toast}</div>}
 
       <div className="section-title" id="mur"><h2>{t.posts}</h2></div>
