@@ -47,7 +47,6 @@ export default function BiblePage() {
 
   return (
     <div>
-      <p className="kicker">{version === "lsg" ? t.versionLsg : t.versionKjv}</p>
       <div className="section-title"><h2>{t.bible}</h2></div>
       <form onSubmit={onSubmit}>
         <input data-testid="bible-search" className="search" value={q} onChange={e => setQ(e.target.value)} placeholder={t.search} />
