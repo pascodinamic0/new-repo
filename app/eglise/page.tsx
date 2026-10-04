@@ -24,6 +24,14 @@ export default function ChurchPage() {
         <p>{t.hours}</p>
         <p className="muted">{locale === "fr" ? "Salle de culte MTUSDA, Kinshasa. Le samedi est le jour de culte." : "MTUSDA worship room, Kinshasa. Saturday is the day of worship."}</p>
       </div>
+      <div className="row" style={{ marginTop: 12 }}>
+        <Link className="btn" href="/eglise/adventistes">
+          {locale === "fr" ? "Découvrir les adventistes" : "About Adventists"}
+        </Link>
+        <Link className="btn-ghost" href="/communaute">
+          {t.community}
+        </Link>
+      </div>
       <div className="grid-2" style={{ marginTop: 12 }}>
         {deps.map(([title, body]) => (
           <section key={title} className="card"><h3>{title}</h3><p className="muted">{body}</p></section>
@@ -31,7 +39,7 @@ export default function ChurchPage() {
       </div>
       <div className="row" style={{ marginTop: 16 }}>
         <Link className="btn" href="/lecons">{t.lessons}</Link>
-        <Link className="btn-ghost" href="/communaute">{t.community}</Link>
+        <Link className="btn-ghost" href="/bible">{t.bible}</Link>
       </div>
     </div>
   )
